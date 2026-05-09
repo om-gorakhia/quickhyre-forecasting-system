@@ -1,0 +1,31 @@
+1
+00:00:00,000 --> 00:00:20,711
+This is a demo of my end-to-end sales forecasting system, built as a data science assignment for QuickHyre. The system takes weekly beverage sales data across 43 US states, trains four different model families, selects the best per state, and serves 8-week forecasts through a REST API. Let me walk you through how it works.
+
+2
+00:00:22,211 --> 00:00:54,971
+The dataset contains 8,084 rows of weekly beverage sales across 43 US states, spanning from January 2019 to March 2023. The raw data has two challenges: mixed date formats in the same column, and irregular spacing that leaves 37% of the weekly grid missing after resampling. The pipeline handles both — parsing mixed dates with pandas, then filling gaps with linear interpolation. After cleaning, we have 11,051 rows on a regular weekly grid.
+
+3
+00:00:56,471 --> 00:01:34,319
+The feature engineering pipeline builds 23 features per row. These include 4 lag features at 1, 7, 30, and 52 weeks back; 6 rolling statistics — means and standard deviations over 4, 8, and 13-week windows; cyclical sin-cosine encodings for month and week of year; a holiday flag, trend proxy, and per-state expanding mean. The key design point is leakage prevention. Every rolling feature uses shift-1 before computing the window, so the current row's target never appears in its own features. All transforms are per-state via groupby — no cross-state information leakage.
+
+4
+00:01:35,819 --> 00:02:21,204
+I train four fundamentally different model families. SARIMA, a classical statistical model fitted per state using auto-ARIMA with yearly seasonality. Prophet, Facebook's additive model with US holidays and multiplicative seasonality. XGBoost, a single global gradient boosting model pooling all 43 states — because 142 rows per state isn't enough for 23 features. And LSTM, a 2-layer PyTorch recurrent network, also trained globally. Both XGBoost and LSTM use recursive multi-step forecasting: predict one week, append the prediction to history, rebuild all features, and repeat 8 times. No future data is ever used.
+
+5
+00:02:22,704 --> 00:03:12,048
+Here are the results. LSTM leads with 5.08% median symmetric MAPE, followed by XGBoost at 6.27%. SARIMA and Prophet trail at 12 and 18 percent. For context, the naive baseline — just repeating last week's value — scores 5.58%. So LSTM does beat naive, but the improvement is modest. The real story is in the feature importance: rolling means account for 90% of XGBoost's signal, meaning this data is dominated by simple momentum. LSTM wins 27 of 43 states, XGBoost wins 15. 26 states use an ensemble blend of the top two, which improved 19 of those 26 states by an average 1.4 percentage points.
+
+6
+00:03:13,548 --> 00:03:40,163
+A single train-validation split can be misleading. The walk-forward backtest runs 3 folds with a 13-week horizon each, using an expanding training window. XGBoost proves more stable with a standard deviation of 2.88 versus 4.57 for LSTM. This confirms the ensemble strategy: LSTM adds value on specific states, but XGBoost provides the reliable foundation.
+
+7
+00:03:41,663 --> 00:04:18,360
+The forecasts are served through a FastAPI application with 6 endpoints. Health check, list states, forecast by state, model info, and a global leaderboard. The API loads pre-computed predictions at startup — no model inference at request time, so responses are sub-millisecond. State names are case-insensitive. Interactive Swagger documentation is auto-generated at the docs endpoint. The entire system is tested with 57 automated tests covering features, metrics, ingestion, all four models, API endpoints, and validation guards.
+
+8
+00:04:19,860 --> 00:04:53,292
+To summarize: this system handles the full lifecycle — from messy raw data to clean predictions served through an API. 23 leakage-free features, 4 model families, validated ensemble selection, walk-forward backtesting, 57 tests, and an HTML report that summarizes everything. The honest limitation is the 37% imputation rate and no exogenous variables. The natural next step would be probabilistic forecasting — prediction intervals instead of point estimates. Thanks for watching.
