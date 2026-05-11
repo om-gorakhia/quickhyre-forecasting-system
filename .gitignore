@@ -43,3 +43,6 @@ desktop.ini
 
 # Temp video renders
 *TEMP*
+
+# Video production assets (final video hosted on GitHub Release)
+demo/assets/

@@ -506,7 +506,9 @@ After running the full pipeline, the `artifacts/` directory contains:
 
 ## Video Demo
 
-[Watch the demo video](https://github.com/om-gorakhia/quickhyre-forecasting-system/releases/download/v1.0.0/Sales_Forecasting_Demo.mp4)
+[![Watch the demo](https://github.com/om-gorakhia/quickhyre-forecasting-system/releases/download/v1.0.0/demo_thumbnail.png)](https://github.com/om-gorakhia/quickhyre-forecasting-system/releases/download/v1.0.0/QuickHyre_Forecasting_Demo.mp4)
+
+[Download demo video (MP4)](https://github.com/om-gorakhia/quickhyre-forecasting-system/releases/download/v1.0.0/QuickHyre_Forecasting_Demo.mp4)
 
 ---
 
@@ -515,7 +517,8 @@ After running the full pipeline, the `artifacts/` directory contains:
 | Item | Link |
 |------|------|
 | **Code Repository** | [github.com/om-gorakhia/quickhyre-forecasting-system](https://github.com/om-gorakhia/quickhyre-forecasting-system) |
-| **Demo Video** | [Sales Forecasting Demo (MP4)](https://github.com/om-gorakhia/quickhyre-forecasting-system/releases/download/v1.0.0/Sales_Forecasting_Demo.mp4) |
+| **Demo Video** | [QuickHyre Forecasting Demo (MP4)](https://github.com/om-gorakhia/quickhyre-forecasting-system/releases/download/v1.0.0/QuickHyre_Forecasting_Demo.mp4) |
+| **Documentation** | [docs/](https://github.com/om-gorakhia/quickhyre-forecasting-system/tree/main/docs) |
 
 ---
 
